@@ -137,7 +137,7 @@
 			-->
 			
 			<!-- Selectors -->
-			<zone name="constant.numeric.integer">
+			<zone name="tag">
 				<starts-with>
 					<expression>\|([a-zA-Z])</expression>
 					<capture number="0" name="punctuation.definition.begin"/>
@@ -149,7 +149,7 @@
 			</zone>
 			
 			<!-- Protocols -->
-			<zone name="constant.numeric.integer">
+			<zone name="tag">
 			    <starts-with>
 			    	<expression>&lt;([a-zA-Z])</expression>
 			    	<capture number="0" name="punctuation.definition.begin"/>
