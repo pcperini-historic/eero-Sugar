@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
+<!-- If anything looks a bit out of place, keep in mind that it's probably scar tissue from Python.sugar, from which most of this is adapted. -->
 <syntax name="com.pcperini.eero">
 	<zones>
 		<include collection="comments" />
