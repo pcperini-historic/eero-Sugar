@@ -159,6 +159,21 @@
 			    	<capture number="0" name="punctuation.definition.end"/>
 			    </ends-with>
 			</zone>
+			
+                        <!-- Preprocessor Bits -->
+                        <!--
+                        To be extended later as I get time!
+                        -->
+                        <zone name="meta.preprocessor">
+			    <starts-with>
+			    	<expression>(#)</expression>
+			    	<capture number="0" name="punctuation.definition.begin"/>
+			    </starts-with>
+			    <ends-with>
+			    	<expression>$[\n\r]*</expression>
+			    	<capture number="0" name="punctuation.definition.end"/>
+			    </ends-with>
+			</zone>
 		</collection>
 		
 		<!-- Itemizer blocks -->
