@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<codesense>
+	
+	<!-- Keywords -->
+	<provider>
+		<selector>eero, eero *:not(string,string *,comment)</selector>
+		<completions>com.pcperini.eero.keywords.control</completions>
+		<complete-match>(?&lt;!\.|\[|\(|,)\b[a-zA-Z]*</complete-match>
+	</provider>
+	<provider>
+		<selector>eero, eero *:not(string,string *,comment)</selector>
+		<completions>com.pcperini.eero.keywords</completions>
+		<complete-match>(?&lt;!\.)\b[a-zA-Z]*</complete-match>
+	</provider>
+	
+</codesense>

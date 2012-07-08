@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<codesense version="1.0">
+	
+	<!-- Language Keywords -->
+	<set name="com.pcperini.eero.keywords.control">	      
+		<completion string="and"/>
+		<completion string="catch"/>
+		<completion string="case"/>
+		<completion string="const"/>
+		<completion string="continue"/>
+		<completion string="default"/>
+		<completion string="else"/>
+		<completion string="end"/>
+		<completion string="extern"/>
+		<completion string="finally"/>
+		<completion string="for"/>
+		<completion string="if"/>
+		<completion string="implementation"/>
+		<completion string="in"/>
+		<completion string="interface"/>
+		<completion string="not"/>
+		<completion string="or"/>
+		<completion string="private"/>
+		<completion string="property"/>
+		<completion string="protected"/>
+		<completion string="protocol"/>
+		<completion string="public"/>
+		<completion string="return"/>
+		<completion string="static"/>
+		<completion string="switch"/>
+		<completion string="synchronized"/>
+		<completion string="throw"/>
+		<completion string="try"/>
+		<completion string="typedef"/>
+		<completion string="using prefix"/>
+		<completion string="while"/>
+		<completion string="xor"/>
+	</set>
+	
+	<set name="com.pcperini.eero.keywords">		
+		<completion string="super"/>
+		<completion string="self"/>
+		<completion string="YES"/>
+		<completion string="NO"/>
+		<completion string="nil"/>
+		<completion string="Nil"/>
+		<completion string="BOOL"/>
+		<completion string="char"/>
+		<completion string="Class"/>
+		<completion string="double"/>
+		<completion string="enum"/>
+		<completion string="float"/>
+		<completion string="int"/>
+		<completion string="id"/>
+		<completion string="long"/>
+		<completion string="short"/>
+		<completion string="struct"/>
+		<completion string="unsigned"/>
+		<completion string="void"/>
+	</set>
+
+</codesense>

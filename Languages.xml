@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings>
+	<language id="com.pcperini.eero">
+		<root-zone>com.pcperini.eero</root-zone>
+		<name>eero</name>
+		<detectors>
+			<extension casesensitive="false">eero</extension>
+		</detectors>
+	</language>
+</settings>

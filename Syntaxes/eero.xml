@@ -1,0 +1,474 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<syntax name="com.pcperini.eero">
+	<zones>
+		<include collection="comments" />
+		<include collection="strings" />
+		<include collection="item-blocks" />
+		<include collection="keywords" />
+		<include collection="constants" />
+		<include collection="numbers" />
+		<include collection="operators" />
+		<include collection="variables" />
+		<include collection="punctuation" />
+	</zones>
+
+	<library>
+		<!-- Comments -->
+		<collection name="comments">
+			<zone name="comment.line">
+				<starts-with>
+					<expression>(//)</expression>
+					<capture number="1" name="punctuation.definition.begin"/>
+				</starts-with>
+				<ends-with>$[\n\r]*</ends-with>
+			</zone>
+			<zone name="comment.block">
+				<starts-with>
+					<expression>/\*</expression>
+					<capture number="0" name="punctuation.definition.begin"/>
+				</starts-with>
+				<ends-with>
+					<expression>\*/</expression>
+					<capture number="0" name="punctuation.definition.end"/>
+				</ends-with>
+			</zone>
+		</collection>
+		
+		<!-- Strings -->
+		<collection name="strings">
+			<zone name="string.long.quoted.double">
+				<starts-with>
+					<expression>(?i)(u|b)?('{3})</expression>
+					<capture number="1" name="punctuation.modifier"/>
+					<capture number="2" name="punctuation.definition.begin"/>
+				</starts-with>
+				<ends-with>
+					<expression>'{3}</expression>
+					<capture number="0" name="punctuation.definition.end"/>
+				</ends-with>
+				<subzones>
+					<include collection="character-escapes" />
+				</subzones>
+			</zone>
+			<zone name="constant.numeric.integer">
+				<starts-with>
+					<expression>(?i)(u|b)?("{3})</expression>
+					<capture number="1" name="punctuation.modifier"/>
+					<capture number="2" name="punctuation.definition.begin"/>
+				</starts-with>
+				<ends-with>
+					<expression>"{3}</expression>
+					<capture number="0" name="punctuation.definition.end"/>
+				</ends-with>
+				<subzones>
+					<include collection="character-escapes" />
+				</subzones>
+			</zone>
+			<zone name="string.quoted.double">
+				<starts-with>
+					<expression>(?i)(u|b)?(')</expression>
+					<capture number="1" name="punctuation.modifier"/>
+					<capture number="2" name="punctuation.definition.begin"/>
+				</starts-with>
+				<ends-with>
+					<expression>'</expression>
+					<capture number="0" name="punctuation.definition.end"/>
+				</ends-with>
+				<subzones>
+					<include collection="character-escapes" />
+				</subzones>
+			</zone>
+			<zone name="constant.numeric.integer">
+				<starts-with>
+					<expression>(?i)(u|b)?(")</expression>
+					<capture number="1" name="punctuation.modifier"/>
+					<capture number="2" name="punctuation.definition.begin"/>
+				</starts-with>
+				<ends-with>
+					<expression>"</expression>
+					<capture number="0" name="punctuation.definition.end"/>
+				</ends-with>
+				<subzones>
+					<include collection="character-escapes" />
+				</subzones>
+			</zone>
+			<!-- Raw strings; they don't need character escapes -->
+			<zone name="string.quoted.double">
+				<starts-with>
+					<expression>(?i)((?:u|b)?r)(')</expression>
+					<capture number="1" name="punctuation.modifier"/>
+					<capture number="2" name="punctuation.definition.begin"/>
+				</starts-with>
+				<ends-with>
+					<expression>'</expression>
+					<capture number="0" name="punctuation.definition.end"/>
+				</ends-with>
+				<subzones>
+					<zone name="constant.character.escape">
+						<expression>(\\)'</expression>
+						<capture number="1" name="punctuation.escape.backslash"/>
+					</zone>
+				</subzones>
+			</zone>
+			<zone name="constant.numeric.integer">
+				<starts-with>
+					<expression>(?i)((?:u|b)?r)(")</expression>
+					<capture number="1" name="punctuation.modifier"/>
+					<capture number="2" name="punctuation.definition.begin"/>
+				</starts-with>
+				<ends-with>
+					<expression>"</expression>
+					<capture number="0" name="punctuation.definition.end"/>
+				</ends-with>
+				<subzones>
+					<zone name="constant.character.escape">
+						<expression>(\\)"</expression>
+						<capture number="1" name="punctuation.escape.backslash"/>
+					</zone>
+				</subzones>
+			</zone>
+			
+			<!-- eero Specific Additions -->
+			<!--
+			If I may be the first to say that poorly document XML is awful.
+			These guys (selectors, protocols, etc.) got stuck here because it was the easier place to put them. If you have a better way, I implore you to branch/change/merge!
+			-->
+			
+			<!-- Selectors -->
+			<zone name="constant.numeric.integer">
+				<starts-with>
+					<expression>\|([a-zA-Z])</expression>
+					<capture number="0" name="punctuation.definition.begin"/>
+				</starts-with>
+				<ends-with>
+					<expression>\|</expression>
+					<capture number="0" name="punctuation.definition.end"/>
+				</ends-with>
+			</zone>
+			
+			<!-- Protocols -->
+			<zone name="constant.numeric.integer">
+			    <starts-with>
+			    	<expression>&lt;([a-zA-Z])</expression>
+			    	<capture number="0" name="punctuation.definition.begin"/>
+			    </starts-with>
+			    <ends-with>
+			    	<expression>([a-zA-Z])&gt;</expression>
+			    	<capture number="0" name="punctuation.definition.end"/>
+			    </ends-with>
+			</zone>
+		</collection>
+		
+		<!-- Itemizer blocks -->
+		<collection name="item-blocks">			
+			<!--
+			These must be defined as blocks because eero has no closing delimiters (which makes it impossible to set up hierarchy solely in the itemizers).
+			
+			THIS IS A NASTY HACK. DO NOT EMULATE IT! It is only necessary in this instance thanks to eero's complete lack of delimiters.
+			-->
+			<zone name="x-item-block.x-item-body">
+				<starts-with>
+					<expression>^(?:(class\b|def\b)|((elif|else|finally|for|if|try|while)(.*?)(?:(:)|(\\$))))</expression>
+					<capture number="1" name="keyword.control"/>
+					<capture number="2" name="x-item-start"/>
+					<capture number="3" name="keyword.control"/>
+					<capture number="4" name="parameters">
+						<subzones>
+							<include collection="comments" />
+							<include collection="strings" />
+							<include collection="keywords" />
+							<include collection="constants" />
+							<include collection="numbers" />
+							<include collection="operators" />
+							<include collection="variables" />
+							<include collection="punctuation" />
+						</subzones>
+					</capture>
+					<capture number="5" name="punctuation.colon"/>
+					<capture number="6" name="punctuation.continuation.backslash"/>
+				</starts-with>
+				<!--
+				The item block ends if the next line is not:
+				1) More indentation than the starting indent for the zone
+				2) Nothing but indentation
+				-->
+				<ends-with>^(?![ \t]|[ \t]*$)</ends-with>
+				<subzones>
+					<!-- A bit of zone duplication here, but it's preferable to have the keyword in the class definition (possible in nested items, but not at root without the regex going into an infinite loop) -->
+					<zone name="class.definition">
+						<starts-with>
+							<!-- Of necessity, the keyword unfortunately gets captured by the itemizer block, hence our lookbehind -->
+							<expression>(?&lt;=class)[ \t]+([\w\_]+)(\(?)</expression>
+							<capture number="1" name="name"/>
+							<capture number="2" name="punctuation.brace.curly.open" />
+						</starts-with>
+						<ends-with>
+							<expression>(\)?)(:)(?=$|[ \t]*#)</expression>
+							<capture number="1" name="punctuation.brace.curly.close" />
+							<capture number="2" name="punctuation.colon" />
+						</ends-with>
+						<subzones>
+							<include collection="comments" />
+							<include collection="strings" />
+							<include collection="keywords" />
+							<include collection="constants" />
+							<include collection="numbers" />
+							<include collection="operators" />
+							<include collection="variables" />
+							<include collection="punctuation" />
+						</subzones>
+					</zone>
+					<zone name="function.definition">
+						<starts-with>
+							<expression>(?&lt;=def)[ \t]+([\w\_]+)(\()</expression>
+							<capture number="1" name="name"/>
+							<capture number="2" name="punctuation.brace.curly.open" />
+						</starts-with>
+						<ends-with>
+							<expression>(\))(:)(?=$|[ \t]*#)</expression>
+							<capture number="1" name="punctuation.brace.curly.close" />
+							<capture number="2" name="punctuation.colon" />
+						</ends-with>
+						<subzones>
+							<include collection="comments" />
+							<include collection="strings" />
+							<include collection="keywords" />
+							<include collection="constants" />
+							<include collection="numbers" />
+							<include collection="operators" />
+							<include collection="variables" />
+							<include collection="punctuation" />
+						</subzones>
+					</zone>
+					
+					<include collection="nested-blocks" />
+				</subzones>
+			</zone>
+		</collection>
+		<collection name="nested-blocks">
+			<!-- This pattern of different definitions for root zones vs. nested ones is necessary because if we combine them (with a * instead of a + for the leading whitespace, for instance) the lookahead causes an infinite loop. We can sort of get around this by using a lookbehind for the "class" and "def" keywords, but then we end up needing to capture the leading whitespace as part of the itemized block. Which sucks. -->
+			<include collection="decorators"/>
+			<zone name="x-item-block">
+				<starts-with>
+					<expression>^([ \t]+)(?:((finally|for|if|implementation|interface|private|property|protected|protocol|public|switch|throw|try|while)\b(.*?)(?:(:)\s*$|(\\$))))</expression>
+					<capture number="2" name="x-item-start"/>
+					<capture number="3" name="keyword.control"/>
+					<capture number="4" name="parameters">
+						<subzones>
+							<include collection="comments" />
+							<include collection="strings" />
+							<include collection="keywords" />
+							<include collection="constants" />
+							<include collection="numbers" />
+							<include collection="operators" />
+							<include collection="variables" />
+							<include collection="punctuation" />
+						</subzones>
+					</capture>
+					<capture number="5" name="punctuation.colon"/>
+					<capture number="6" name="punctuation.continuation.backslash"/>
+				</starts-with>
+				<ends-with>^(?!\1[ \t]|[ \t]*$)</ends-with>
+				<subzones name="x-item-body">
+					<!-- These definition zones allow for multiline parameter lists -->
+					<zone name="class.definition">
+						<starts-with>
+							<expression>(class)[ \t]+([\w\_]+)(\(?)</expression>
+							<capture number="1" name="keyword.control"/>
+							<capture number="2" name="name"/>
+							<capture number="3" name="punctuation.brace.curly.open" />
+						</starts-with>
+						<ends-with>
+							<expression>(\)?)(:)(?=$|[ \t]*#)</expression>
+							<capture number="1" name="punctuation.brace.curly.close" />
+							<capture number="2" name="punctuation.colon" />
+						</ends-with>
+						<subzones>
+							<include collection="comments" />
+							<include collection="strings" />
+							<include collection="keywords" />
+							<include collection="constants" />
+							<include collection="numbers" />
+							<include collection="operators" />
+							<include collection="variables" />
+							<include collection="punctuation" />
+						</subzones>
+					</zone>
+					<zone name="function.definition">
+						<starts-with>
+							<expression>(def)[ \t]+([\w\_]+)(\()</expression>
+							<capture number="1" name="keyword.control"/>
+							<capture number="2" name="name"/>
+							<capture number="3" name="punctuation.brace.curly.open" />
+						</starts-with>
+						<ends-with>
+							<expression>(\))(:)(?=$|[ \t]*#)</expression>
+							<capture number="1" name="punctuation.brace.curly.close" />
+							<capture number="2" name="punctuation.colon" />
+						</ends-with>
+						<subzones>
+							<include collection="comments" />
+							<include collection="strings" />
+							<include collection="keywords" />
+							<include collection="constants" />
+							<include collection="numbers" />
+							<include collection="operators" />
+							<include collection="variables" />
+							<include collection="punctuation" />
+						</subzones>
+					</zone>
+					<include collection="nested-blocks" />
+				</subzones>
+			</zone>
+			
+			<include collection="comments" />
+			<include collection="strings" />
+			<include collection="keywords" />
+			<include collection="constants" />
+			<include collection="numbers" />
+			<include collection="operators" />
+			<include collection="variables" />
+			<include collection="punctuation" />
+		</collection>
+		<collection name="decorators">
+			<zone name="meta.decorator">
+				<expression>((@)[\w_]+).*$</expression>
+				<capture number="1" name="name"/>
+				<capture number="2" name="punctuation.definition.at-symbol"/>
+			</zone>
+		</collection>
+		
+		<!-- Keywords -->
+		<collection name="keywords">
+			<zone name="keyword.control">
+				<expression>\b(catch|case|const|continue|default|else|end|extern|finally|for|if|implementation|interface|private|property|protected|protocol|public|return|static|switch|synchronized|throw|try|typedef|using prefix|while|and|in|is|not|or|xor|super|self|BOOL|char|Class|double|enum|float|int|id|long|short|struct|unsigned|void)\b</expression>
+			</zone>
+		</collection>
+		
+		<!--Constants-->
+		<collection name="constants">
+			<zone name="constant.language.boolean.true">
+				<expression>\bYES\b</expression>
+			</zone>
+			<zone name="constant.language.boolean.false">
+				<expression>\bNO\b</expression>
+			</zone>
+			<zone name="constant.language.null">
+				<expression>\b(nil|Nil)\b</expression>
+			</zone>
+		</collection>
+		
+		<!--Numbers-->
+		<collection name="numbers">
+			<zone name="constant.numeric.octal">
+				<expression>\b0[oO]?[0-7_]+[lL]?\b</expression>
+			</zone>
+			<zone name="constant.numeric.hexadecimal">
+				<expression>\b0[xX][0-9a-fA-F_]+[lL]?\b</expression>
+			</zone>
+			<zone name="constant.numeric.binary">
+				<expression>\b0[bB][01_]+</expression>
+			</zone>
+			<zone name="constant.numeric.float">
+				<!--Equivalent: .0001, 0.0001, 1e-4, 1.0e-4-->
+				<expression>\b((([0-9_]+)?\.[0-9_]+([eE]-?[0-9_]+)?)|([0-9_]+[eE]-?[0-9_]+))\b</expression>
+			</zone>
+			<zone name="constant.numeric.integer">
+				<expression>\b[0-9_]+[lL]?\b</expression>
+			</zone>
+			<zone name="constant.numeric.imaginary">
+				<!--Equivalent: .0001, 0.0001, 1e-4, 1.0e-4-->
+				<expression>\b([0-9_]+|((([0-9_]+)?\.[0-9_]+([eE]-?[0-9_]+)?)|([0-9_]+[eE]-?[0-9_]+)))[jJ]\b</expression>
+			</zone>
+		</collection>
+		
+		<!--Operators-->
+		<collection name="operators">
+			<zone name="operator.assignment">
+				<expression>\+=|-=|\*\*=|\*=|//=|/=|%=|&amp;=|\|=|\^=|>>=|&lt;&lt;=|</expression>
+			</zone>
+			<zone name="operator.binary">
+				<expression>\+|-|\*\*|\*|//|/|%</expression>
+			</zone>
+			<zone name="operator.bitwise.binary">
+				<expression>&lt;&lt;|>></expression>
+			</zone>
+			<zone name="operator.comparison">
+				<expression>==|!=|&lt;>|>=|>|&lt;=|&lt;</expression>
+			</zone>
+			<zone name="operator.assignment">
+				<expression>=</expression>
+			</zone>
+			<zone name="operator.bitwise.binary">
+				<expression>&amp;|\||\^</expression>
+			</zone>
+			<zone name="operator.bitwise.unary">
+				<expression>~</expression>
+			</zone>
+		</collection>
+		
+		<!-- Variables -->
+		<collection name="variables">
+			<!--Function Invocation-->
+			<zone>
+				<expression>(\.)([a-zA-Z0-9_]+)\s*(\()</expression>
+				<capture number="1" name="punctuation.delimiter.period"/>
+				<capture number="2" name="variable.function.method"/>
+				<capture number="3" name="punctuation.brace.round.open"/>
+			</zone>
+			<zone>
+				<expression>([a-zA-Z0-9_]+)\s*(\()</expression>
+				<capture number="1" name="variable.function"/>
+				<capture number="2" name="punctuation.brace.round.open"/>
+			</zone>
+			<!--Standard variables and accessors-->
+			<zone>
+				<expression>(\.)([a-zA-Z0-9_]+)</expression>
+				<capture number="1" name="punctuation.delimiter.period"/>
+				<capture number="2" name="variable.property"/>
+			</zone>
+			<zone>
+				<expression>[a-zA-Z0-9_]+</expression>
+				<capture number="0" name="variable"/>
+			</zone>
+		</collection>
+		
+		<!--Punctuation-->
+		<collection name="punctuation">
+			<zone name="punctuation.delimiter.comma">
+				<expression>,</expression>
+			</zone>
+			<zone name="punctuation.brace.round.open">
+				<expression>\(</expression>
+			</zone>
+			<zone name="punctuation.brace.round.close">
+				<expression>\)</expression>
+			</zone>
+			<zone name="punctuation.brace.curly.open">
+				<expression>\{</expression>
+			</zone>
+			<zone name="punctuation.brace.curly.close">
+				<expression>\}</expression>
+			</zone>
+			<zone name="punctuation.brace.square.open">
+				<expression>\[</expression>
+			</zone>
+			<zone name="punctuation.brace.square.close">
+				<expression>\]</expression>
+			</zone>
+			<zone name="punctuation.colon">
+				<expression>:</expression>
+			</zone>
+			<zone name="punctuation.delimiter.period">
+				<expression>\.</expression>
+			</zone>
+			<zone name="punctuation.statement.terminator">
+				<expression>\;</expression>
+			</zone>
+			<!-- Line continuation -->
+			<zone name="punctuation.continuation.backslash">
+				<expression>\\$</expression>
+			</zone>
+		</collection>
+	</library>
+</syntax>
