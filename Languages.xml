@@ -5,6 +5,7 @@
 		<name>eero</name>
 		<detectors>
 			<extension casesensitive="false">eero</extension>
+			<extension casesensitive="false">ero</extension>
 		</detectors>
 	</language>
 </settings>
