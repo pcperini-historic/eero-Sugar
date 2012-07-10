@@ -358,7 +358,7 @@
 		<!-- Keywords -->
 		<collection name="keywords">
 			<zone name="keyword.control">
-				<expression>\b(catch|case|const|continue|default|else|end|extern|finally|for|if|implementation|interface|private|property|protected|protocol|public|return|static|switch|synchronized|throw|try|typedef|using prefix|while|and|in|is|not|or|xor|super|self|BOOL|char|Class|double|enum|float|int|id|long|short|struct|unsigned|void)\b</expression>
+				<expression>\b(autoreleasepool|catch|case|const|continue|default|else|end|extern|finally|for|if|implementation|interface|private|property|protected|protocol|public|return|static|switch|synchronized|throw|try|typedef|using prefix|while|and|in|is|not|or|xor|super|self|BOOL|char|Class|double|enum|float|int|id|long|short|struct|unsigned|void)\b</expression>
 			</zone>
 		</collection>
 		

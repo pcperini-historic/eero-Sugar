@@ -4,6 +4,7 @@
 	<!-- Language Keywords -->
 	<set name="com.pcperini.eero.keywords.control">	      
 		<completion string="and"/>
+		<completion string="autoreleasepool"/>
 		<completion string="catch"/>
 		<completion string="case"/>
 		<completion string="const"/>
